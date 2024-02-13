@@ -1,0 +1,82 @@
+#define MLa 8
+#define MLb 9
+#define MRa 10
+#define MRb 11
+const int us_vcc=4;
+const int trigPin=5;
+const int echoPin=6;
+const int us_gnd=7;
+const int IR_Right=2;
+const int IR_Left=3;
+void setup() {
+ Serial.begin(9600);
+ pinMode(IR_Left,INPUT);
+ pinMode(IR_Right,INPUT);
+ pinMode(us_vcc,OUTPUT);
+ pinMode(us_gnd,OUTPUT);
+ digitalWrite(us_vcc,HIGH);
+ digitalWrite(us_gnd,LOW);
+ pinMode(MLa,OUTPUT);
+ pinMode(MLb,OUTPUT);
+ pinMode(MRa,OUTPUT);
+ pinMode(MRa,OUTPUT);
+}
+void loop() {
+ long duration,distance;
+ pinMode(trigPin,OUTPUT);
+ digitalWrite(trigPin,LOW);
+ delayMicroseconds(2);
+ digitalWrite(trigPin,HIGH);
+ delayMicroseconds(10);
+ digitalWrite(trigPin,LOW);
+ pinMode(echoPin,INPUT);
+ duration=pulseIn(echoPin,HIGH);
+ distance=duration/29/2;
+ Serial.print("distance= ");
+ Serial.print(distance);
+ Serial.println("cm");
+ delay(100);
+ if(distance>=10){
+ if(digitalRead(IR_Left)==HIGH && digitalRead(IR_Right)==HIGH){
+ digitalWrite(MLa,LOW);
+ digitalWrite(MLb,LOW);
+ digitalWrite(MRa,LOW);
+ digitalWrite(MRb,LOW);
+ }
+ else if(digitalRead(IR_Left)==LOW && digitalRead(IR_Right)==HIGH){
+ digitalWrite(MLa,LOW);
+ digitalWrite(MLb,LOW);
+ digitalWrite(MRa,HIGH);
+ digitalWrite(MRb,LOW);
+ }
+ else if(digitalRead(IR_Left)==HIGH && digitalRead(IR_Right)==LOW){
+ digitalWrite(MLa,HIGH);
+ digitalWrite(MLb,LOW);
+ digitalWrite(MRa,LOW);
+ digitalWrite(MRb,LOW);
+ }
+ else if(digitalRead(IR_Left)==LOW && digitalRead(IR_Right)==LOW){
+ digitalWrite(MLa,HIGH);
+ digitalWrite(MLb,LOW);
+ digitalWrite(MRa,HIGH);
+ digitalWrite(MRb,LOW);
+ }
+ }
+ else{
+ digitalWrite(MLa,LOW);
+ digitalWrite(MLb,LOW);
+ digitalWrite(MRa,LOW);
+ digitalWrite(MRb,LOW);
+ delay(500);
+ digitalWrite(MLa,LOW);
+ digitalWrite(MLb,HIGH);
+ digitalWrite(MRa,LOW);
+ digitalWrite(MRb,HIGH);
+ delay(500);
+ digitalWrite(MLa,LOW);
+ digitalWrite(MLb,LOW);
+ digitalWrite(MRa,LOW);
+ digitalWrite(MRb,LOW);
+ delay(100);
+ }
+}
